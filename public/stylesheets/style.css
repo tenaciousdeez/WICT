@@ -1,8 +1,7 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
 
-a {
-  color: #00B7FF;
-}
+.comment {padding-bottom: 5px;}
+.panel-body.comment-container {padding-top: 0; padding-bottom: 0;}
+.comment-header {margin-bottom: 5px;}
+.commentAuthor {margin: 0 5px;}
+.commentTimestamp {color: #888;}
+.red {color:red;}

@@ -10,5 +10,5 @@ module.exports.dishInfo = function(req, res, next){
 
 //Get Add Comment page
 module.exports.addComment = function(req, res, next){
-  res.render('index', { title: 'Add Comment' });
+  res.render('dish-comment-form', { title: 'Add Comment' });
 };

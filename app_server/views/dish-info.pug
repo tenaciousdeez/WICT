@@ -9,7 +9,7 @@ block content
       .row
         .col-xs-12.col-sm-6
           p.likes
-            span.glyphicon.glyphicon-heart  -number of likes-
+            span.glyphicon.glyphicon-heart.red  #[span#likesCount -number of likes-]
           p -Only Zip, City, and State-
           .panel.panel-primary
             .panel-heading
@@ -32,5 +32,38 @@ block content
               p Prep the boeuf
               p heat the big beefy meat in a skillet
               p drizzle butter as if you were a popcorn machine
-        .col-xs-12.col-sm-6
-          
+        .col-xs-12.col-sm-6.location-map
+          .panel.panel-primary
+            .panel-heading
+              h2.panel-title Where It Was Cooked
+            .panel-body
+              img.img-responsive.image-rounded(src='https://maps.googleapis.com/maps/api/staticmap?center=38.924530,-77.003058&zoom=17&size=400x350&sensor=false&markers=38.924530,-77.003058&scale=2')
+      .row
+        .col-xs-12
+          .panel.panel-primary.review-panel
+            .panel-heading
+              a.button.btn.btn-default.pull-right(href='/dish/comment/new') Add Comment
+              h2.panel-title User Comments
+            .panel-body.comment-container
+              .row
+                .comment
+                  .well.well-sm.comment-header
+                    span.likes
+                      span.glyphicon.glyphicon-heart
+                    span.commentAuthor Doug Dimmadome
+                    small.commentTimestamp.pull-right 30 February 1844
+                  .col-xs-12
+                    p WOW! ALMOST AS GOOD AS MY DIMMSDALE DIMMADOME
+              .row
+                .comment
+                  .well.well-sm.comment-header
+                    span.likes
+                      span.glyphicon.glyphicon-heart
+                    span.commentAuthor Courage the Cowardly Dog
+                    small.commentTimestamp.pull-right 12pm after the apocalypse
+                  .col-xs-12
+                    p AHHHHHHHHHHHHHHHH! OH GOD, OH GOD, OH GOD. AAGHGHGHGH!
+    .col-xs-12.col-md-3
+      p.lead -user- cooked -dish title- on -date of submission-.
+      p Want to see more dishes by -user-? Check out their #[a(href='/user/cookbook') cookbook]!
+      p Want to share what you think about -user-'s dish? Add a comment of your own!

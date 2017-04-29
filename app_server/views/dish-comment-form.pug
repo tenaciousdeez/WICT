@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  .row.page-header
+    .col-lg-12
+      h1 Comment on -dish author-'s "-Dish Name-"
+  .row
+    .col-xs-12.col-md-9
+      .col-xs-12.col-md-6.pull-right
+        .row
+          .col-xs-12
+            .panel.panel-primary
+              .panel-heading
+                h2.panel-title Dish Images
+              .panel-body
+                img
+                img
+                img
+          .col-xs-12.location-map
+            .panel.panel-primary
+              .panel-heading
+                h2.panel-title Where It Was Cooked
+              .panel-body
+                img.img-responsive.image-rounded(src='https://maps.googleapis.com/maps/api/staticmap?center=38.924530,-77.003058&zoom=17&size=400x350&sensor=false&markers=38.924530,-77.003058&scale=2')
+      .col-xs-12.col-md-6
+      form.form-horizontal(action="/dish", method="get", role="form")
+        .form-group
+          label.col-xs-10.col-sm-2.control-label(for="like") Like?
+          .col-xs-12.col-sm-2
+            a(href='#') #[span.glyphicon.glyphicon-heart-empty.red]
+        .form-group
+          label.col-sm-2.control-label(for="comment") Comment
+          .col-sm-10
+            textarea#comment.form-control(name="comment", rows="5")
+        button.btn.btn-default.pull-right Add my comment
+    .col-xs-12.col-md-4
