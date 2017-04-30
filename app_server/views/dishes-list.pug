@@ -4,23 +4,21 @@ block content
   #banner.page-header
     .row
       .col-lg-6
-        h1 WICT
-         small &nbsp; See what's cooking around you!
+        h1= pageHeader.title
+         small &nbsp; #{pageHeader.strapline}
   .row
     .col-xs-12.col-sm-8
       .row.list-group
-        .col-xs-12.list-group-item
-          h4
-            a(href="/dish") Fill It Mig Naan
-            small &nbsp;
-              span.glyphicon.glyphicon-heart-empty
-            span.badge.pull-right.badge-default -Zipcode goes here-
-          p.address -Only city and State-
-          p
-            span.label.label-warning beef
-            | &nbsp;
-            span.label.label-warning hot
-            | &nbsp;  
+        each dish in dishes
+          .col-xs-12.list-group-item
+            h4
+              a(href="/dish")= dish.name
+              span.glyphicon.glyphicon-heart.red #[small= " " + dish.likes]
+              span.badge.pull-right.badge-default= dish.distance
+            p.address= dish.zip + " in " + dish.address
+            p
+              each category in dish.categories
+                span.label.label-warning= category
+                |  &nbsp;
     .col-xs-12.col-sm-4
-      p.lead WICT lets you share images of what you cooked with those around you, as well as see what others are cooking.
-    
+      p.lead= sidebar
