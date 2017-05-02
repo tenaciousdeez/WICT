@@ -23,14 +23,16 @@ block content
               .panel-body
                 img.img-responsive.image-rounded(src='https://maps.googleapis.com/maps/api/staticmap?center=38.924530,-77.003058&zoom=17&size=400x350&sensor=false&markers=38.924530,-77.003058&scale=2')
       .col-xs-12.col-md-6
-      form.form-horizontal(action="/dish", method="get", role="form")
-        .form-group
-          label.col-xs-10.col-sm-2.control-label(for="like") Like?
-          .col-xs-12.col-sm-2
-            a(href='#') #[span.glyphicon.glyphicon-heart-empty.red]
-        .form-group
-          label.col-sm-2.control-label(for="comment") Comment
-          .col-sm-10
-            textarea#comment.form-control(name="comment", rows="5")
-        button.btn.btn-default.pull-right Add my comment
-    .col-xs-12.col-md-4
+        form.form-horizontal(action="/dish", method="get", role="form")
+          .form-group
+            label.col-xs-2.control-label(for="like") Like?
+            .col-xs-2.heart-fix
+              a(href='#') #[span.glyphicon.glyphicon-heart-empty.red]
+          .form-group
+            label.col-lg-2.control-label(for="comment") Comment
+            .col-lg-10
+              textarea#comment.form-control(name="comment", rows="5")
+          button.btn.btn-default.pull-right Add my comment
+    .col-xs-12.col-md-3
+      p Want to see more dishes by #{dish.cook}? Check out their #[a(href='/user/cookbook') cookbook]!
+      p Want to share what you think about #{dish.cook}'s dish? Add a comment of your own!
