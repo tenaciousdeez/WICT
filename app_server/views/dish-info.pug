@@ -48,7 +48,7 @@ block content
         .col-xs-12
           .panel.panel-primary.review-panel
             .panel-heading
-              a.button.btn.btn-default.pull-right(href='/dish/comment/new') Add Comment
+              a.button.btn.btn-default.pull-right(href='/dish/#{dish._id}/comments/new') Add Comment
               h2.panel-title User Comments
             .panel-body.comment-container
               each comment in dish.comments
@@ -56,7 +56,8 @@ block content
                   .comment
                     .well.well-sm.comment-header
                       span.commentAuthor= comment.author
-                      small.commentTimestamp.pull-right= comment.timestamp
+                      small.commentTimestamp.pull-right
+                        +formatDate(comment.createdOn)
                   .col-xs-12
                     p !{(comment.commentText).replace(/\n/g, '<br/>')}
     .col-xs-12.col-md-3

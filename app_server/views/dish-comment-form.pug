@@ -3,7 +3,7 @@ extends layout
 block content
   .row.page-header
     .col-lg-12
-      h1 Comment on -dish author-'s "-Dish Name-"
+      h1 Comment on #{dish.cook}'s "#{dish.name}"
   .row
     .col-xs-12.col-md-9
       .col-xs-12.col-md-6.pull-right
@@ -23,7 +23,9 @@ block content
               .panel-body
                 img.img-responsive.image-rounded(src='https://maps.googleapis.com/maps/api/staticmap?center=38.924530,-77.003058&zoom=17&size=400x350&sensor=false&markers=38.924530,-77.003058&scale=2')
       .col-xs-12.col-md-6
-        form.form-horizontal(action="/dish", method="get", role="form")
+        form.form-horizontal(action="#{url}", method="post", role="form", id="addComment")
+          - if (error == "val")
+            .alert.alert-danger(role="alert") All fields required, please try again
           .form-group
             label.col-xs-2.control-label(for="like") Like?
             .col-xs-2.heart-fix

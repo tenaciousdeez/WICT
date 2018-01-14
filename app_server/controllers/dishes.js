@@ -1,156 +1,161 @@
+var request = require('request');
+var apiOptions = {
+  server : "http://localhost:3000"
+};
+if (process.env.NODE_ENV === 'production') {
+  apiOptions.server = "https://wict.herokuapp.com";
+}
+
+//Helper Functions
+var _isNumeric = function (n) {
+  return !isNaN(parseFloat(n) && isFinite(n));
+};
+
+var _formatDistance = function(distance) {
+  var numDistance, unit;
+  if (distance && _isNumeric(distance)) {
+    if (distance > 1) {
+      numDistance = parseFloat(distance).toFixed(1);
+      unit = 'km';
+    } else {
+      numDistance = parseInt(distance * 1000,10);
+      unit = 'm';
+    }
+    return numDistance + unit;
+  } else {
+    return "?";
+  }
+};
+
+var _showError = function(req, res, status) {
+  var title, content;
+  if (status === 404) {
+    title = "404, page not found";
+    content = "I checked the whole spice rack but I couldn't find it. I SWEAR!";
+  } else if (status === 500) {
+    title = "500, we got the ingredients wrong";
+    content = "I thought it said baking soda... I THOUGHT IT SAID BAKING SODA!";
+  } else {
+    title = status + ", unexpected suboptimal outcome";
+    content = "Maybe we shouldn't have made Fried Pickle and Garlic Ice Cream.  Who knows?";
+  }
+  res.status(status);
+  res.render('generic-text', {
+    title : title,
+    content : content
+  });
+};
+
+var getDishInfo = function (req, res, callback) {
+  var requestOptions, path;
+  path = "/api/dishes/" + req.params.dishid;
+  requestOptions = {
+    url : apiOptions.server + path,
+    method : "GET",
+    json : {}
+  };
+  request(
+    requestOptions,
+    function(err, response, body) {
+      var data = body;
+      if (response.statusCode === 200) {
+        data.coords = {
+          lat : body.coords[0],
+          lng : body.coords[1]
+        };
+        callback(req, res, data);
+      } else {
+        _showError(req, res, response.statusCode);
+      }
+    }
+  );
+};
+
 //Get Home page
-module.exports.homeDishList = function(req, res, next){
+var renderHomepage = function(req, res, responseBody){
   res.render('dishes-list', {
     title: "See what's cooking around you and show others what you've cooked!",
     pageHeader: {
       title: 'Dishes Near You',
       strapline: 'See what home cooks around you are making!'
     },
-    sidebar: "WICT lets you share images of what you cooked with those around you, as well as see what others are cooking.",
-    dishes: [{
-      name: 'Stir-fry Burrito Cake',
-      address: '-City, State-',
-      zip: '-zip code-',
-      categories: ['-category-', '-category-', '-category-'],
-      likes: '-like count-',
-      distance: '-distance to zip-',
-      coords: {lat: 38.924530, lng: -77.003058},
-      images: [{
-        source: '',
-        title: '',
-        caption: ''
-      }],
-      comments: [{
-        author: 'Doug Dimmadome',
-        timestamp: '30 February 1844',
-        commentText: 'WOW! ALMOST AS GOOD AS MY DIMMSDALE DIMMADOME'
-      },{
-        author: 'Courage the Cowardly Dog',
-        timestamp: '12pm after the apocalypse',
-        commentText: 'AHHHHHHHHHHHHHHHH! OH GOD, OH GOD, OH GOD. AAGHGHGHGH!'
-      }]
-    },{
-      name: 'Super Soggy Salad Sponge',
-      address: '-City, State-',
-      zip: '-zip code-',
-      categories: ['-category-', '-category-', '-category-'],
-      likes: '-like count-',
-      distance: '-distance to zip-',
-      coords: {lat: 38.924530, lng: -77.003058},
-      images: [{
-        source: '',
-        title: '',
-        caption: ''
-      }],
-      comments: [{
-        author: 'Doug Dimmadome',
-        timestamp: '30 February 1844',
-        commentText: 'WOW! ALMOST AS GOOD AS MY DIMMSDALE DIMMADOME'
-      },{
-        author: 'Courage the Cowardly Dog',
-        timestamp: '12pm after the apocalypse',
-        commentText: 'AHHHHHHHHHHHHHHHH! OH GOD, OH GOD, OH GOD. AAGHGHGHGH!'
-      }]
-    },{
-      name: 'Cajun Crab Cheese Dip',
-      address: '-City, State-',
-      zip: '-zip code-',
-      categories: ['-category-', '-category-', '-category-'],
-      likes: '-like count-',
-      distance: '-distance to zip-',
-      coords: {lat: 38.924530, lng: -77.003058},
-      images: [{
-        source: '',
-        title: '',
-        caption: ''
-      }],
-      comments: [{
-        author: 'Doug Dimmadome',
-        timestamp: '30 February 1844',
-        commentText: 'WOW! ALMOST AS GOOD AS MY DIMMSDALE DIMMADOME'
-      },{
-        author: 'Courage the Cowardly Dog',
-        timestamp: '12pm after the apocalypse',
-        commentText: 'AHHHHHHHHHHHHHHHH! OH GOD, OH GOD, OH GOD. AAGHGHGHGH!'
-      }]
-    }]
+    sidebar: "WICT lets you share images of what you cooked with those around you, as well as see what others are cooking."
   });
 };
 
+module.exports.homeDishList = function(req, res, next){
+  renderHomepage(req, res);
+};
+
 //Get Dish Info page
-module.exports.dishInfo = function(req, res, next){
+var renderDetailPage = function(req, res, dishDetail) {
   res.render('dish-info', {
-    title: 'Szechuan McNuggets with the Szechuan McNugget Sauce',
-    pageHeader: {title: 'Szechuan McNuggets with the Szechuan McNugget Sauce'},
+    title: dishDetail.name,
+    pageHeader: {title: dishDetail.name},
     sidebar: {
       context:'-user- cooked -dish title- on -date of submission-.',
       callToAction: 'Want to share your thoughts on -author name-s -dish name-? Leave a comment!'
     },
-    dish: {
-      name: 'Szechuan McNuggets with the Szechuan McNugget Sauce',
-      cook: 'Donkey Kong',
-      dateCreated: '6 June 2006',
-      address: '-City, State-',
-      zip: '-zip code-',
-      categories: ['-category1-', '-category2-', '-category3-'],
-      ingredients: ['-ingredient1-', '-ingredient2-', '-ingredient3-'],
-      instructions: ['-instruction1-', '-instruction2-', '-instruction3-'],
-      likes: '-like count-',
-      distance: '-distance to zip-',
-      coords: {lat: 38.924530, lng: -77.003058},
-      images: [{
-        source: '',
-        title: '',
-        caption: ''
-      }],
-      comments: [{
-        author: 'Doug Dimmadome',
-        timestamp: '30 February 1844',
-        commentText: 'WOW! ALMOST AS GOOD AS MY DIMMSDALE DIMMADOME'
-      },{
-        author: 'Courage the Cowardly Dog',
-        timestamp: '12pm after the apocalypse',
-        commentText: 'AHHHHHHHHHHHHHHHH! OH GOD, OH GOD, OH GOD. AAGHGHGHGH!'
-      }]
-    }
+    dish: dishDetail
+  });
+};
+
+module.exports.dishInfo = function(req, res, next){
+  getDishInfo(req, res, function(req, res, responseData) {
+    renderDetailPage(req, res, responseData);
   });
 };
 
 //Get Add Comment page
-module.exports.addComment = function(req, res, next){
+
+var renderCommentForm = function (req, res, dishDetail) {
   res.render('dish-comment-form', {
-    title: 'Add Comment',
-    pageHeader: {title: 'Comment on -cook name-s -dish name-'},
+    title: 'Add Comment for ' + dishDetail.name,
+    pageHeader: { title: 'Comment on ' + dishDetail.cook + '\'s ' + dishDetail.name },
     sidebar: {
-      context:'-user- cooked -dish title- on -date of submission-.',
-      callToAction: 'Want to share your thoughts on -author name-s -dish name-? Leave a comment!'
+      context: dishDetail.cook + ' cooked ' + dishDetail.name + ' on ' + dishDetail.createdOn,
+      callToAction: 'Want to share your thoughts on ' + dishDetail.cook + '\'s ' + dishDetail.name + '? Leave a comment!'
     },
-    dish: {
-      name: 'Szechuan McNuggets with the Szechuan McNugget Sauce',
-      cook: 'Donkey Kong',
-      dateCreated: '6 June 2006',
-      address: '-City, State-',
-      zip: '-zip code-',
-      categories: ['-category1-', '-category2-', '-category3-'],
-      ingredients: ['-ingredient1-', '-ingredient2-', '-ingredient3-'],
-      instructions: ['-instruction1-', '-instruction2-', '-instruction3-'],
-      likes: '-like count-',
-      distance: '-distance to zip-',
-      coords: {lat: 38.924530, lng: -77.003058},
-      images: [{
-        source: '',
-        title: '',
-        caption: ''
-      }],
-      comments: [{
-        author: 'Doug Dimmadome',
-        timestamp: '30 February 1844',
-        commentText: 'WOW! ALMOST AS GOOD AS MY DIMMSDALE DIMMADOME'
-      },{
-        author: 'Courage the Cowardly Dog',
-        timestamp: '12pm after the apocalypse',
-        commentText: 'AHHHHHHHHHHHHHHHH! OH GOD, OH GOD, OH GOD. AAGHGHGHGH!'
-      }]
-    }
+    dish: dishDetail,
+    error: req.query.err,
+    url: req.originalUrl
   });
+};
+
+module.exports.addComment = function(req, res, next){
+  getDishInfo(req, res, function(req, res, responseData) {
+    renderCommentForm(req, res, responseData);
+  });
+};
+
+module.exports.doAddComment = function(req, res) {
+  var requestOptions, path, dishid, postdata;
+  dishid = req.params.dishid;
+  path = "/api/dishes/" + dishid + "/comments";
+  postdata = {
+    author: "USER WHO POSTED",
+    commentText: req.body.comment
+  };
+  requestOptions = {
+    url : apiOptions.server + path,
+    method : "POST",
+    json : postdata
+  };
+  if (!postdata.author || !postdata.commentText) {
+    res.redirect('/dish/' + dishid + '/comments/new?err=val');
+  } else {
+    request(
+      requestOptions,
+      function(err, response, body) {
+        if (response.statusCode === 201) {
+          res.redirect('/dish/' + dishid);
+        } else if (response.statusCode === 400 && body.name && body.name === "ValidationError") {
+          res.redirect('/dish/' + dishid + '/comments/new?err=val');
+        } else {
+          console.log(body);
+          _showError(req, res, response.statusCode);
+        }
+      }
+    );
+  }
 };

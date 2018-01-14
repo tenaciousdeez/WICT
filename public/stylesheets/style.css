@@ -1,4 +1,3 @@
-
 .comment {padding-bottom: 5px;}
 .panel-body.comment-container {padding-top: 0; padding-bottom: 0;}
 .comment-header {margin-bottom: 5px;}
@@ -6,4 +5,8 @@
 .commentTimestamp {color: #888;}
 .red {color:red;}
 h4 a {margin-right: 5px;}
+#filter {margin-left: 5px;}
+.likesCountElement {display: inline-block;}
+.likeHeart {margin-right: 10px;}
 .heart-fix {padding-top: 7px;}
+.likesCount {}

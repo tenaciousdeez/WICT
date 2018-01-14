@@ -1,0 +1,63 @@
+<navigation></navigation>
+
+<div class="container">
+  <page-header content="vm.pageHeader"></page-header>
+  <div class="row">
+    <div class="col-xs-12 col-md-9">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <p class="likes" likes-count likes="vm.data.dish.likes"></p>
+          <p class="address">{{ vm.data.dish.zip }} + ' in ' + {{ vm.data.dish.address }}</p>
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h2 class="panel-title">Categories</h2>
+            </div>
+            <div class="panel-body">
+              <span class="label label-warning label-category" ng-repear="category in vm.data.dish.categories">
+                <span class="glyphicon glyphicon-ok"></span>
+                {{ category }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 dish-map">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h2 class="panel-title">Other dishes nearby</h2>
+            </div>
+            <div class="panel-body">
+              <img src="http:maps.googleapis.com/maps/api/staticmap?center={{ vm.data.dish.coords[0] }},{{ vm.data.dish.coords[1] }}&amp;zoom=15&amp;size=400x350&amp;sensor=false&amp;markers={{ vm.data.dish.coords[0] }},{{ vm.data.dish.coords[1] }}&amp;scale=2" class="img-responsive img-rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-primary comment-panel">
+            <div class="panel-heading">
+              <a ng-click="vm.popupCommentForm()" class="btn btn-default pull-right">Add Comment</a>
+              <h2 class="panel-title">Comments</h2>
+            </div>
+            <div class="comment" ng-repeat="comment in vm.data.dish.comments | orderBy:'createdOn':true">
+              <div class="row">
+                <div class="well well-sm comment-header">
+                  <span class="commentAuthor">{{ comment.author }}</span>
+                  <small calss="commentTimeStamp">{{ comment.createdOn | date : 'd MMMM yyyy'}}</small>
+                </div>
+                <div class-"col-xs-12">
+                  <p ng-bind-html="comment.commentText | addHtmlLineBreaks"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-3">
+      <p class="lead">{{ vm.data.dish.cook }} cooked {{ vm.data.dish.name }} on {{ vm.data.dish.dateCreated }}.</p>
+      <p>Want to see more dishes by {{ vm.data.dish.cook }}? Check out their <a href="/user/{{ userid }}/cookbook">cookbook</a>!</p>
+      <p>Want to share what you think about {{ vm.data.dish.cook }}'s dish? Add a comment of your own!</p>
+    </div>
+  </div>
+  <wictFooter></wictFooter>
+</div>
